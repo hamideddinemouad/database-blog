@@ -1,0 +1,80 @@
+create table tags(
+id INT not null auto_increment,
+tagname not null varchar(50),
+constraint tag_id_primary primary key (id)
+);
+
+create table roles(
+id INT not null auto_increment,
+rolename varchar(50) not null,
+constraint role_id_primary_key primary key (id)
+);
+
+create table users(
+id INT not null auto_increment,
+name varchar(50) not null,
+mail varchar(50) not null,
+password varchar(60),
+role_id INT not null,
+constraint user_id_primary_key primary key (id),
+constraint role_id_reference foreign key (role_id) references roles(id),
+constraint unique_mail unique (mail)
+);
+
+create table articles(
+id INT not null auto_increment,
+user_id INT not null,
+tag_id INT not null,
+title VARCHAR(200) not null,
+content TEXT not null,
+createdAt DATE not null,
+constraint article_id_primary_key primary key (id),
+constraint user_id_reference foreign key (user_id) references users(id),
+constraint tag_id_reference foreign key (tag_id) references tags(id),
+constraint unique_title unique (title)
+);
+
+create table comments(
+id INT not null auto_increment,
+article_id INT not null,
+user_id INT  not null,
+content varchar(250) not null,
+constraint comment_id_primary_key_in_comments primary key (id),
+constraint article_id_reference_in_comments foreign key (article_id) references articles(id),
+constraint user_id_reference_in_comments foreign key (user_id) references users(id)
+);
+
+INSERT INTO tags (name) VALUES 
+('Technology'), 
+('Science'), 
+('Education'), 
+('Art'), 
+('Sports');
+
+
+INSERT INTO roles (rolename) VALUES 
+('Admin'), 
+('Editor'), 
+('Writer'), 
+('Reader');
+
+
+INSERT INTO users (name, mail, password, role_id) VALUES 
+('Alice', 'alice@example.com', 'password123', 1), 
+('Bob', 'bob@example.com', 'password456', 2), 
+('Charlie', 'charlie@example.com', 'password789', 3), 
+('Diana', 'diana@example.com', 'password321', 4);
+
+
+INSERT INTO articles (user_id, tag_id, title, content, createdAt) VALUES 
+(1, 1, 'The Future of Technology', 'Content about technology...', '2024-01-01'), 
+(2, 2, 'Discovering New Stars', 'Content about science...', '2024-01-15'), 
+(3, 3, 'The Power of Education', 'Content about education...', '2024-02-01'), 
+(1, 4, 'Art in the Digital Age', 'Content about art...', '2024-02-20');
+
+
+INSERT INTO comments (article_id, user_id, content) VALUES 
+(5, 4, 'Great article on technology!'), 
+(6, 3, 'Amazing insights into space exploration!'), 
+(7, 2, 'Education truly is powerful!'), 
+(8, 1, 'Digital art is so fascinating!');
